@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.tarena.note.dao.ActivityDao">
+
+<insert id="activity" parameterType="org.tarena.note.entity.Activity">
+INSERT INTO cn_note_activity(cn_note_activity_id,cn_activity_id,cn_note_id,cn_note_activity_up,cn_note_activity_down,cn_note_activity_title,cn_note_activity_body)
+VALUES(#{cn_note_activity_id},#{cn_activity_id},#{cn_note_id},#{cn_note_activity_up},#{cn_note_activity_down},#{cn_note_activity_title},#{cn_note_activity_body})
+</insert>
+
+<select id="findActicityNotes" parameterType="org.tarena.note.vo.ActivityBean" resultType="org.tarena.note.entity.Activity"> 
+SELECT *FROM cn_note_activity 
+<where>
+	<if test="cn_note_activity_id !=null">
+	AND cn_note_activity_id=#{cn_note_activity_id}
+	</if>
+	<if test="cn_activity_id !=null">
+	AND cn_activity_id=#{cn_activity_id}
+	</if>
+	<if test="cn_note_id !=null">
+	AND cn_note_id=#{cn_note_id}
+	</if>
+	<if test="cn_note_activity_title !=null">
+	AND cn_note_activity_title LIKE #{cn_note_activity_title}
+	</if>
+</where>
+limit #{begin},#{pageSize}
+</select>
+
+</mapper>

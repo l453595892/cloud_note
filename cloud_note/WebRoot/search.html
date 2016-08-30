@@ -1,0 +1,55 @@
+<html>
+	<head>
+		
+		<script type="text/javascript" src="scripts/jquery.min.js"></script>
+		<script type="text/javascript">
+			$(function(){
+				$("#searchBtn").click(function(){
+					var title=$("#title").val().trim();
+					var status=$("#status").val();
+					var beginTime=$("#beginTime").val().trim();
+					var endTime=$("#endTime").val().trim();
+					$.ajax({
+						url:"http://localhost:8080/cloud_note/note/highSearch.do",
+						type:"post",
+						data:{"title":title,"status":status,"beginTime":beginTime,"endTime":endTime},
+						dataType:"json",
+						success:function(result){
+							if(result.statues==0){
+								$("#search_list tr:gt(0)").remove();
+								var notes=result.data;
+								for(var i=0;i<notes.length;i++){
+									var noteTitle=notes[i].cn_note_title;
+									var noteStatus=notes[i].cn_note_status_id;
+									var createTime=notes[i].createTime;
+									var statusTxt=noteStatus=="1"?"normal":"recycle";
+									var str="<tr><td>"+noteTitle+"</td><td>"+statusTxt+"</td><td>"+createTime+"</td></tr>"
+									$("#search_list").append(str);
+								}
+							}
+						},
+						error:function(){
+							alert("搜索失败")
+						}
+					})
+				});
+			});
+		</script>
+	</head>
+	<body style = "font-size:30px;">
+		标题:<input type="text" id="title">
+		状态:<select id="status">
+				<option value="0">--all--</option>
+				<option value="1">normal</option>
+				<option value="2">recycle</option>
+			 </select>
+		<br/>
+		开始日期:<input type="text" id="beginTime">
+		结束日期:<input type="text" id="endTime">
+		<button id="searchBtn">开始搜索</button>
+		<hr/>
+		<table id="search_list">
+			
+		</table>
+	</body>
+</html>
